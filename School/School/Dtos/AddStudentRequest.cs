@@ -1,6 +1,6 @@
-﻿namespace School.Dtos
+namespace School.Dtos
 {
-    public class AddStudentDto
+    public class AddStudentRequest
     {
         public string Name { get; set; }
         public int Score { get; set; }

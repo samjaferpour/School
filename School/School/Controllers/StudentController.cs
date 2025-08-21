@@ -17,7 +17,7 @@ namespace School.Controllers
             this._context = context;
         }
         [HttpPost]
-        public IActionResult Add([FromBody] AddStudentDto request)
+        public IActionResult Add([FromBody] AddStudentRequest request)
         {
             var student = new Student
             {
@@ -26,36 +26,77 @@ namespace School.Controllers
             };
             _context.Students.Add(student);
             _context.SaveChanges();
-            return Ok(student);
+            
+            var response = new AddStudentResponse
+            {
+                Id = student.Id,
+                Name = student.Name,
+                Score = student.Score
+            };
+            return Ok(response);
         }
         [HttpGet]
         public IActionResult GetAll()
         {
             var students = _context.Students.ToList();
-            return Ok(students);
+            var response = students.Select(s => new GetStudentResponse
+            {
+                Id = s.Id,
+                Name = s.Name,
+                Score = s.Score
+            }).ToList();
+            return Ok(response);
         }
         [HttpGet]
         public IActionResult GetById([FromQuery] int id)
         {
             var student = _context.Students.Find(id);
-            return Ok(student);
+            if (student == null)
+            {
+                return NotFound();
+            }
+            
+            var response = new GetStudentResponse
+            {
+                Id = student.Id,
+                Name = student.Name,
+                Score = student.Score
+            };
+            return Ok(response);
         }
         [HttpDelete]
-        public IActionResult Remove([FromQuery] int id)
+        public IActionResult Remove([FromBody] RemoveStudentRequest request)
         {
-            var student = _context.Students.Find(id);
+            var student = _context.Students.Find(request.Id);
+            if (student == null)
+            {
+                return NotFound();
+            }
+            
             _context.Students.Remove(student);
             _context.SaveChanges();
-            return Ok(student);
+            return Ok();
         }
         [HttpPut]
-        public IActionResult Edit([FromBody] EditStudentDto request)
+        public IActionResult Edit([FromBody] EditStudentRequest request)
         {
             var currentStudent = _context.Students.Find(request.Id);
+            if (currentStudent == null)
+            {
+                return NotFound();
+            }
+            
             currentStudent.Name = request.Name;
             currentStudent.Score = request.Score;
             _context.SaveChanges();
-            return Ok(request);
+            
+            var response = new GetStudentResponse
+            {
+                Id = currentStudent.Id,
+                Name = currentStudent.Name,
+                Score = currentStudent.Score
+            };
+            return Ok(response);
         }
     }
 }

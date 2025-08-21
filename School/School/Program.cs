@@ -12,6 +12,10 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<SchoolDbContext>(o => o.UseSqlServer(builder.Configuration.GetConnectionString("SchoolConStr")));
 
+builder.Services.AddMcpServer()
+                .WithStdioServerTransport()
+                .WithToolsFromAssembly();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

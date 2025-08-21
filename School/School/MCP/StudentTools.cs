@@ -60,9 +60,9 @@ namespace School.MCP
 
         [McpServerTool]
         [Description("Gets a student by ID")]
-        public GetStudentResponse GetStudentById([Description("Gets a student Id as a parameter as a JSON")] GetStudentByIdRequest id)
+        public GetStudentResponse GetStudentById([Description("Gets a student Id as a parameter as a JSON")] GetStudentByIdRequest request)
         {
-            var student = _schoolDbContext.Students.Find(id);
+            var student = _schoolDbContext.Students.Find(request.Id);
             if (student == null)
             {
                 return null;

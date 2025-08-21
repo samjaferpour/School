@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using School.Contexts;
+using School.MCP;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,10 +14,14 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<SchoolDbContext>(o => o.UseSqlServer(builder.Configuration.GetConnectionString("SchoolConStr")));
 
 builder.Services.AddMcpServer()
-                .WithStdioServerTransport()
-                .WithToolsFromAssembly();
+                .WithTools<StudentTools>()
+                .WithHttpTransport();
+
+
 
 var app = builder.Build();
+
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -30,5 +35,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapMcp();
 
 app.Run();

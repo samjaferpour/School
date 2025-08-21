@@ -47,10 +47,10 @@ namespace School.Controllers
             }).ToList();
             return Ok(response);
         }
-        [HttpGet]
-        public IActionResult GetById([FromQuery] int id)
+        [HttpPost]
+        public IActionResult GetById([FromBody] GetStudentByIdRequest request)
         {
-            var student = _context.Students.Find(id);
+            var student = _context.Students.Find(request.Id);
             if (student == null)
             {
                 return NotFound();
